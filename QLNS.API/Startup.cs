@@ -1,3 +1,4 @@
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using QLNS.API.Application.DTOs.User;
 using QLNS.API.Application.Interfaces;
 using QLNS.API.Application.Services;
 using QLNS.Application.Mapping;
@@ -48,12 +50,17 @@ namespace QLNS.API
             services.AddScoped<IHopDongLaoDongRepository, HopDongLaoDongRepository>();
             services.AddScoped<IHopDongLaoDongService, HopDongLaoDongService>();
 
+            services.AddTransient<IValidator<CreateUserDTO>, CreateUserDTOValidator>();
+
             // AutoMapper settings
             services.AddAutoMapper(typeof(MappingProfile));
 
             //WebApi Configuration
             services.AddControllers()
-                .AddNewtonsoftJson(ops => { ops.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore; })
+                .AddNewtonsoftJson(ops => { 
+                    ops.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+                    ops.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                })
                 .AddFluentValidation(fv => { fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false; });
 
             services.AddSwaggerGen(c =>

@@ -1,4 +1,6 @@
-﻿using QLNS.API.Application.DTOs.NhanVien;
+﻿using FluentValidation;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -16,7 +18,19 @@ namespace QLNS.API.Application.DTOs.User
         public string Password { get; set; }
 
         [NotMapped]
-        [Compare("Password")]
         public string ConfirmPassword { get; set; }
+    }
+
+    public class CreateUserDTOValidator : AbstractValidator<CreateUserDTO>
+    {
+        public CreateUserDTOValidator()
+        {
+            RuleFor(o => o.Email)
+                .NotEmpty()
+                .EmailAddress()
+                .NotEqual(o => o.Email);
+            RuleFor(o => o.Password).NotEmpty();
+            RuleFor(o => o.ConfirmPassword).NotEmpty().Equal(o => o.Password);
+        }
     }
 }

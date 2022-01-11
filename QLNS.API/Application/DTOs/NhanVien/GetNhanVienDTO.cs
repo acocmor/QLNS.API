@@ -17,15 +17,10 @@ namespace QLNS.API.Application.DTOs.NhanVien
         public int ThangSinh { get; set; }
         public int NamSinh { get; set; }
         public int GioiTinh { get; set; }
-        public Guid UserId { get; set; }
-        public GetUserDTO User { get; set; }
-        public Guid QueQuanId { get; set; }
-        public GetQueQuanDTO QueQuan { get; set; }
-        public Guid? HopDongLaoDongId { get; set; }
-        public GetHDLDDTO? HopDongLaoDong { get; set; }
-        public Guid? ChucVuId { get; set; }
-        public GetChucVuDTO? ChucVu { get; set; }
-        public Guid? PhongBanId { get; set; }
-        public GetPhongBanDTO? PhongBan { get; set; }
+        public virtual GetUserDTO User { get; set; }
+        public virtual GetQueQuanDTO QueQuan { get; set; }
+        public virtual GetHDLDDTO HopDongLaoDong { get; set; }
+        public virtual GetChucVuNoListDTO ChucVu { get; set; }
+        public virtual GetPhongBanNoListDTO PhongBan { get; set; }
     }
 }

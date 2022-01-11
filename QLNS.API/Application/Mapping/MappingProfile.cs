@@ -30,11 +30,13 @@ namespace QLNS.Application.Mapping
             
             //ChucVU Map
             CreateMap<ChucVu, GetChucVuDTO>().ReverseMap();
+            CreateMap<ChucVu, GetChucVuNoListDTO>().ReverseMap();
             CreateMap<CreateChucVuDTO, ChucVu>();
             CreateMap<UpdateChucVuDTO, ChucVu>();
             
             //PhongBan Map
             CreateMap<PhongBan, GetPhongBanDTO>().ReverseMap();
+            CreateMap<PhongBan, GetPhongBanNoListDTO>().ReverseMap();
             CreateMap<CreatePhongBanDTO, PhongBan>();
             CreateMap<UpdatePhongBanDTO, PhongBan>();
             

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using QLNS.API.Domain.Core.Interfaces;
+using QLNS.API.Infrastructure.Extensions;
 using QLNS.Domain.Entities;
 using QLNS.Infrastructure.Context;
 using System;
@@ -37,6 +38,7 @@ namespace QLNS.API.Infrastructure.Repositories
 
         public TEntity Update(TEntity entity)
         {
+            //Context.Entry(entity).State = EntityState.Modified;
             DbSet.Update(entity);
             return entity;
         }
@@ -44,13 +46,17 @@ namespace QLNS.API.Infrastructure.Repositories
         public virtual async Task Delete(Guid id)
         {
             var entity = await DbSet.FindAsync(id);
-            if (entity != null) DbSet.Remove(entity);
+            if (entity != null)
+            {
+                DbSet.Remove(entity);
+            }
         }
 
         public async Task<int> SaveChangesAsync()
         {
             return await Context.SaveChangesAsync();
         }
+
         public void Dispose()
         {
             Dispose(true);

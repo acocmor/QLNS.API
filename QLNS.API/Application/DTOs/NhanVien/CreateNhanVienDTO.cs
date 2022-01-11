@@ -16,12 +16,12 @@ namespace QLNS.API.Application.DTOs.NhanVien
         public int NamSinh { get; set; }
         public int GioiTinh { get; set; }
         public Guid UserId { get; set; }
-        public UpdateUserDTO User { get; set; }
+        public CreateUserDTO User { get; set; }
         public Guid QueQuanId { get; set; }
-        public UpdateQueQuanDTO QueQuan { get; set; }
+        public CreateQueQuanDTO QueQuan { get; set; }
         public Guid? ChucVuId { get; set; }
-        public GetChucVuDTO? ChucVu { get; set; }
+        public virtual GetChucVuDTO ChucVu { get; set; }
         public Guid? PhongBanId { get; set; }
-        public GetPhongBanDTO? PhongBan { get; set; }
+        public virtual GetPhongBanDTO PhongBan { get; set; }
     }
 }
