@@ -15,23 +15,14 @@ namespace QLNS.API.Application.Services
     {
         private readonly INhanVienRepository _nhanVienRepository;
         private readonly IQueQuanRepository _queQuanRepository;
-        private readonly IPhongBanRepository _phongBanRepository;
-        private readonly IChucVuRepository _chucVuRepository;
-        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
 
-        public NhanVienService(INhanVienRepository nhanVienRepository, 
-                                IQueQuanRepository queQuanRepository, 
-                                IPhongBanRepository phongBanRepository,
-                                IChucVuRepository chucVuRepository,
-                                IUserRepository userRepository,
+        public NhanVienService(INhanVienRepository nhanVienRepository,
+                                IQueQuanRepository queQuanRepository,
                                 IMapper mapper)
         {
             _nhanVienRepository = nhanVienRepository;
             _queQuanRepository = queQuanRepository;
-            _phongBanRepository = phongBanRepository;
-            _chucVuRepository = chucVuRepository;
-            _userRepository = userRepository;
             _mapper = mapper;
         }
         public async Task<List<GetNhanVienDTO>> GetAllNhanViens()
@@ -59,24 +50,6 @@ namespace QLNS.API.Application.Services
 
         public async Task<GetNhanVienDTO> UpdateNhanVien(Guid id, UpdateNhanVienDTO request)
         {
-            //var original = await _nhanVienRepository.GetById(id);
-            //if (original == null) return null;
-
-            //original.Ho = request.Ho;
-            //original.Ten = request.Ten;
-            //original.NgaySinh = request.NgaySinh;
-            //original.ThangSinh = request.ThangSinh;
-            //original.NamSinh = request.NamSinh;
-            //original.GioiTinh = request.GioiTinh;
-
-            //var oQueQuan = _queQuanRepository.GetById(request.QueQuanId);
-            //if (oQueQuan == null) 
-            //    return null;
-            //oQueQuan.ChiTiet = oQueQuan.ChiTiet;
-            //_chucVuRepository.Update(original);
-            //await _chucVuRepository.SaveChangesAsync();
-            ////original.QueQuan = ;
-
             var original = await _nhanVienRepository.GetById(id);
             if (original == null) return null;
 
@@ -86,20 +59,24 @@ namespace QLNS.API.Application.Services
             original.ThangSinh = request.ThangSinh;
             original.NamSinh = request.NamSinh;
             original.GioiTinh = request.GioiTinh;
-            original.ChucVuId = request.ChucVuId;
 
-            if(original.PhongBanId != request.PhongBanId)
-            {
+            var queQuan = await _queQuanRepository.GetById(request.QueQuan.Id);
+            if (queQuan == null) return null;
+            queQuan.ChiTiet = request.QueQuan.ChiTiet;
+            queQuan.XaPhuong = request.QueQuan.XaPhuong;
+            queQuan.QuanHuyen = request.QueQuan.QuanHuyen;
+            queQuan.TinhThanhPho = request.QueQuan.TinhThanhPho;
+            _queQuanRepository.Update(queQuan);
+            await _queQuanRepository.SaveChangesAsync();
+
+            if (request.ChucVuId != null)
+                original.ChucVuId = request.ChucVuId;
+            if (request.PhongBanId != null)
                 original.PhongBanId = request.PhongBanId;
-                var phongBan = await _phongBanRepository.GetById((Guid)request.PhongBanId);
-                if (phongBan == null) return null;
-                original.PhongBan = phongBan;
-            }
 
             _nhanVienRepository.Update(original);
             await _nhanVienRepository.SaveChangesAsync();
             return _mapper.Map<GetNhanVienDTO>(original);
-            //return null;
         }
 
         public void Dispose()

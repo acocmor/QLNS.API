@@ -38,8 +38,8 @@ namespace QLNS.API.Infrastructure.Repositories
 
         public TEntity Update(TEntity entity)
         {
-            //Context.Entry(entity).State = EntityState.Modified;
-            DbSet.Update(entity);
+            Context.Entry(entity).State = EntityState.Modified;
+            //DbSet.Update(entity);
             return entity;
         }
 

@@ -15,6 +15,11 @@ namespace QLNS.Infrastructure.Repositories
         {
         }
 
+        public override async Task<IEnumerable<ChucVu>> GetAll()
+        {
+            return await DbSet.AsNoTracking().Include(x => x.DanhSachNhanVien).ToListAsync();
+        }
+
         public override async Task<ChucVu> GetById(Guid id)
         {
             return await DbSet

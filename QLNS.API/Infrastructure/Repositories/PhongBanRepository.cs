@@ -5,6 +5,7 @@ using QLNS.Infrastructure.Context;
 using System;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace QLNS.Infrastructure.Repositories
 {
@@ -12,6 +13,11 @@ namespace QLNS.Infrastructure.Repositories
     {
         public PhongBanRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
+        }
+
+        public override async Task<IEnumerable<PhongBan>> GetAll()
+        {
+            return await DbSet.AsNoTracking().Include(x => x.DanhSachNhanVien).ToListAsync();
         }
 
         public override async Task<PhongBan> GetById(Guid id)

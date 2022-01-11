@@ -38,9 +38,19 @@ namespace QLNS.API.Application.Services
             throw new NotImplementedException();
         }
 
-        public Task<GetQueQuanDTO> UpdateQueQuan(Guid id, UpdateQueQuanDTO request)
+        public async Task<GetQueQuanDTO> UpdateQueQuan(Guid id, UpdateQueQuanDTO request)
         {
-            throw new NotImplementedException();
+            var original = await _queQuanRepository.GetById(id);
+            if (original == null) return null;
+
+            original.ChiTiet = request.ChiTiet;
+            original.XaPhuong = request.XaPhuong;
+            original.QuanHuyen = request.QuanHuyen;
+            original.TinhThanhPho = request.TinhThanhPho;
+
+            _queQuanRepository.Update(original);
+            await _queQuanRepository.SaveChangesAsync();
+            return _mapper.Map<GetQueQuanDTO>(original);
         }
 
         public void Dispose()
