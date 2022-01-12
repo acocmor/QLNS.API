@@ -19,7 +19,7 @@ namespace QLNS.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<GetPhongBanDTO>>> GetAllChucVu()
+        public async Task<ActionResult<List<GetPhongBanDTO>>> GetAllPhongBan()
         {
             return Ok(await _phongBanService.GetAllPhongBans());
         }
@@ -28,7 +28,7 @@ namespace QLNS.API.Controllers
         [Route("{id}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(GetPhongBanDTO), StatusCodes.Status200OK)]
-        public async Task<ActionResult<GetPhongBanDTO>> GetChucVuById(Guid id)
+        public async Task<ActionResult<GetPhongBanDTO>> GetPhongBanById(Guid id)
         {
             var result = await _phongBanService.GetNhanPhongBanId(id);
             if (result == null) return NotFound();
@@ -39,7 +39,7 @@ namespace QLNS.API.Controllers
         public async Task<ActionResult<GetPhongBanDTO>> Create([FromBody] CreatePhongBanDTO request)
         {
             var newChucVu = await _phongBanService.CreatePhongBan(request);
-            return CreatedAtAction(nameof(GetChucVuById), new { id = newChucVu.Id }, newChucVu);
+            return CreatedAtAction(nameof(GetPhongBanById), new { id = newChucVu.Id }, newChucVu);
 
         }
 

@@ -10,6 +10,7 @@ namespace QLNS.Domain.Entities
 
         [Required]
         public string Password { get; set; }
+        public Guid NhanVienId { get; set; }
         public NhanVien NhanVien { get; set; }
     }
 }

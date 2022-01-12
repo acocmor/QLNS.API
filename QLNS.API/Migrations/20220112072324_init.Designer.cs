@@ -10,7 +10,7 @@ using QLNS.Infrastructure.Context;
 namespace QLNS.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220111081250_init")]
+    [Migration("20220112072324_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,7 +51,13 @@ namespace QLNS.API.Migrations
                     b.Property<DateTime>("NgayKetThuc")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid>("NhanVienId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("NhanVienId")
+                        .IsUnique();
 
                     b.ToTable("HopDongLaoDongs");
                 });
@@ -71,9 +77,6 @@ namespace QLNS.API.Migrations
                     b.Property<string>("Ho")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("HopDongLaoDongId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<int>("NamSinh")
                         .HasColumnType("int");
 
@@ -83,33 +86,17 @@ namespace QLNS.API.Migrations
                     b.Property<Guid?>("PhongBanId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("QueQuanId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Ten")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ThangSinh")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ChucVuId");
 
-                    b.HasIndex("HopDongLaoDongId")
-                        .IsUnique()
-                        .HasFilter("[HopDongLaoDongId] IS NOT NULL");
-
                     b.HasIndex("PhongBanId");
-
-                    b.HasIndex("QueQuanId")
-                        .IsUnique();
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
 
                     b.ToTable("NhanViens");
                 });
@@ -137,6 +124,9 @@ namespace QLNS.API.Migrations
                     b.Property<string>("ChiTiet")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("NhanVienId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("QuanHuyen")
                         .HasColumnType("nvarchar(max)");
 
@@ -147,6 +137,9 @@ namespace QLNS.API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("NhanVienId")
+                        .IsUnique();
 
                     b.ToTable("QueQuans");
                 });
@@ -160,50 +153,69 @@ namespace QLNS.API.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("NhanVienId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("NhanVienId")
+                        .IsUnique();
+
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("QLNS.Domain.Entities.HopDongLaoDong", b =>
+                {
+                    b.HasOne("QLNS.Domain.Entities.NhanVien", "NhanVien")
+                        .WithOne("HopDongLaoDong")
+                        .HasForeignKey("QLNS.Domain.Entities.HopDongLaoDong", "NhanVienId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("NhanVien");
                 });
 
             modelBuilder.Entity("QLNS.Domain.Entities.NhanVien", b =>
                 {
                     b.HasOne("QLNS.Domain.Entities.ChucVu", "ChucVu")
                         .WithMany("DanhSachNhanVien")
-                        .HasForeignKey("ChucVuId");
-
-                    b.HasOne("QLNS.Domain.Entities.HopDongLaoDong", "HopDongLaoDong")
-                        .WithOne("NhanVien")
-                        .HasForeignKey("QLNS.Domain.Entities.NhanVien", "HopDongLaoDongId");
+                        .HasForeignKey("ChucVuId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("QLNS.Domain.Entities.PhongBan", "PhongBan")
                         .WithMany("DanhSachNhanVien")
-                        .HasForeignKey("PhongBanId");
-
-                    b.HasOne("QLNS.Domain.Entities.QueQuan", "QueQuan")
-                        .WithOne("NhanVien")
-                        .HasForeignKey("QLNS.Domain.Entities.NhanVien", "QueQuanId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("QLNS.Domain.Entities.User", "User")
-                        .WithOne("NhanVien")
-                        .HasForeignKey("QLNS.Domain.Entities.NhanVien", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PhongBanId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("ChucVu");
 
-                    b.Navigation("HopDongLaoDong");
-
                     b.Navigation("PhongBan");
+                });
 
-                    b.Navigation("QueQuan");
+            modelBuilder.Entity("QLNS.Domain.Entities.QueQuan", b =>
+                {
+                    b.HasOne("QLNS.Domain.Entities.NhanVien", "NhanVien")
+                        .WithOne("QueQuan")
+                        .HasForeignKey("QLNS.Domain.Entities.QueQuan", "NhanVienId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("NhanVien");
+                });
+
+            modelBuilder.Entity("QLNS.Domain.Entities.User", b =>
+                {
+                    b.HasOne("QLNS.Domain.Entities.NhanVien", "NhanVien")
+                        .WithOne("User")
+                        .HasForeignKey("QLNS.Domain.Entities.User", "NhanVienId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("NhanVien");
                 });
 
             modelBuilder.Entity("QLNS.Domain.Entities.ChucVu", b =>
@@ -211,24 +223,19 @@ namespace QLNS.API.Migrations
                     b.Navigation("DanhSachNhanVien");
                 });
 
-            modelBuilder.Entity("QLNS.Domain.Entities.HopDongLaoDong", b =>
+            modelBuilder.Entity("QLNS.Domain.Entities.NhanVien", b =>
                 {
-                    b.Navigation("NhanVien");
+                    b.Navigation("HopDongLaoDong");
+
+                    b.Navigation("QueQuan");
+
+                    b.Navigation("User")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("QLNS.Domain.Entities.PhongBan", b =>
                 {
                     b.Navigation("DanhSachNhanVien");
-                });
-
-            modelBuilder.Entity("QLNS.Domain.Entities.QueQuan", b =>
-                {
-                    b.Navigation("NhanVien");
-                });
-
-            modelBuilder.Entity("QLNS.Domain.Entities.User", b =>
-                {
-                    b.Navigation("NhanVien");
                 });
 #pragma warning restore 612, 618
         }

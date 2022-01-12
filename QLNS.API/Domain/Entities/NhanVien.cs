@@ -13,13 +13,11 @@ namespace QLNS.Domain.Entities
         public int ThangSinh { get; set; }
         public int NamSinh { get; set; }
         public int GioiTinh { get; set; }
-        [Required]
-        public Guid UserId { get; set; }
+        public string? SDT { get; set; }
+
         [Required]
         public User User { get; set; }
-        public Guid QueQuanId { get; set; }
         public QueQuan QueQuan { get; set; }
-        public Guid? HopDongLaoDongId { get; set; }
         public HopDongLaoDong? HopDongLaoDong { get; set; }
         public Guid? ChucVuId { get; set; }
         public ChucVu? ChucVu { get; set; }

@@ -9,6 +9,6 @@ namespace QLNS.API.Application.DTOs.HopDongLaoDong
         public string LoaiHopDong { get; set; }
         public DateTime NgayBatDau { get; set; }
         public DateTime NgayKetThuc { get; set; }
-        public GetNhanVienDTO NhanVien { get; set; }
+        public Guid NhanVienId { get; set; }
     }
 }

@@ -48,6 +48,7 @@ namespace QLNS.API.Infrastructure.Repositories
             var entity = await DbSet.FindAsync(id);
             if (entity != null)
             {
+                //Context.Entry(entity).State = EntityState.Deleted;
                 DbSet.Remove(entity);
             }
         }

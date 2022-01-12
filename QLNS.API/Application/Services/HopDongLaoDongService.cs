@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using QLNS.API.Application.DTOs.HopDongLaoDong;
 using QLNS.API.Application.Interfaces;
+using QLNS.Domain.Entities;
 using QLNS.Domain.Repositories;
 using System;
 using System.Collections.Generic;
@@ -18,9 +19,18 @@ namespace QLNS.API.Application.Services
             _hopDongLaoDongRepository = hopDongLaoDongRepository;
             _mapper = mapper;
         }
-        public Task<GetHDLDDTO> CreateHDLD(CreateHDLDDTO request)
+        public async Task<GetHDLDDTO> CreateHDLD(CreateHDLDDTO request)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var hdld = _hopDongLaoDongRepository.Create(_mapper.Map<HopDongLaoDong>(request));
+                await _hopDongLaoDongRepository.SaveChangesAsync();
+                return _mapper.Map<GetHDLDDTO>(hdld);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         public Task<bool> DeleteHDLD(Guid id)
@@ -28,14 +38,14 @@ namespace QLNS.API.Application.Services
             throw new NotImplementedException();
         }
 
-        public Task<List<GetHDLDDTO>> GetAllHDLDs()
+        public async Task<List<GetHDLDDTO>> GetAllHDLDs()
         {
-            throw new NotImplementedException();
+            return _mapper.Map<List<GetHDLDDTO>>(await _hopDongLaoDongRepository.GetAll());
         }
 
-        public Task<GetHDLDDTO> GetHDLDById(Guid id)
+        public async Task<GetHDLDDTO> GetHDLDById(Guid id)
         {
-            throw new NotImplementedException();
+            return _mapper.Map<GetHDLDDTO>(await _hopDongLaoDongRepository.GetById(id));
         }
 
         public Task<GetHDLDDTO> UpdateHDLD(Guid id, UpdateHDLDDTO request)

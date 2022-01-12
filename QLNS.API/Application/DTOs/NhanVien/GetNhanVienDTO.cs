@@ -17,6 +17,7 @@ namespace QLNS.API.Application.DTOs.NhanVien
         public int ThangSinh { get; set; }
         public int NamSinh { get; set; }
         public int GioiTinh { get; set; }
+        public string SDT { get; set; }
         public virtual GetUserDTO User { get; set; }
         public virtual GetQueQuanDTO QueQuan { get; set; }
         public virtual GetHDLDDTO HopDongLaoDong { get; set; }

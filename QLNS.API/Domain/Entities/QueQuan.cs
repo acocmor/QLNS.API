@@ -9,6 +9,7 @@ namespace QLNS.Domain.Entities
         public string XaPhuong { get; set; }
         public string QuanHuyen { get; set; }
         public string TinhThanhPho { get; set; }
+        public Guid NhanVienId { get; set; }
         public NhanVien NhanVien { get; set; }
     }
 }

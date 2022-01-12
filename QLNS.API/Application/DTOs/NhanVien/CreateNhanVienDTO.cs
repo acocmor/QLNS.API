@@ -15,9 +15,8 @@ namespace QLNS.API.Application.DTOs.NhanVien
         public int ThangSinh { get; set; }
         public int NamSinh { get; set; }
         public int GioiTinh { get; set; }
-        public Guid UserId { get; set; }
+        public string SDT { get; set; }
         public CreateUserDTO User { get; set; }
-        public Guid QueQuanId { get; set; }
         public CreateQueQuanDTO QueQuan { get; set; }
         public Guid? ChucVuId { get; set; }
         public virtual GetChucVuDTO ChucVu { get; set; }

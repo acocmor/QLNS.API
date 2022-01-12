@@ -19,7 +19,7 @@ namespace QLNS.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<GetNhanVienDTO>>> GetAllChucVu()
+        public async Task<ActionResult<List<GetNhanVienDTO>>> GetAllNhanVien()
         {
             return Ok(await _nhanVienService.GetAllNhanViens());
         }

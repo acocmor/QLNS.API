@@ -36,16 +36,15 @@ namespace QLNS.API.Application.Services
         }
         public async Task<GetNhanVienDTO> CreateNhanVien(CreateNhanVienDTO request)
         {
-            var nhanVien = _nhanVienRepository.Create(_mapper.Map<NhanVien>(request));
-            await _nhanVienRepository.SaveChangesAsync();
-
-            return _mapper.Map<GetNhanVienDTO>(nhanVien);
-        }
-
-        public async Task<bool> DeleteNhanVien(Guid id)
-        {
-            var delete = _nhanVienRepository.Delete(id);
-            return await _nhanVienRepository.SaveChangesAsync() > 0;
+            try
+            {
+                var nhanVien = _nhanVienRepository.Create(_mapper.Map<NhanVien>(request));
+                await _nhanVienRepository.SaveChangesAsync();
+                return _mapper.Map<GetNhanVienDTO>(nhanVien);
+            } catch (Exception)
+            {
+                return null;
+            }
         }
 
         public async Task<GetNhanVienDTO> UpdateNhanVien(Guid id, UpdateNhanVienDTO request)
@@ -60,7 +59,7 @@ namespace QLNS.API.Application.Services
             original.NamSinh = request.NamSinh;
             original.GioiTinh = request.GioiTinh;
 
-            var queQuan = await _queQuanRepository.GetById(request.QueQuan.Id);
+            var queQuan = await _queQuanRepository.GetById(original.QueQuan.Id);
             if (queQuan == null) return null;
             queQuan.ChiTiet = request.QueQuan.ChiTiet;
             queQuan.XaPhuong = request.QueQuan.XaPhuong;
@@ -77,6 +76,12 @@ namespace QLNS.API.Application.Services
             _nhanVienRepository.Update(original);
             await _nhanVienRepository.SaveChangesAsync();
             return _mapper.Map<GetNhanVienDTO>(original);
+        }
+
+        public async Task<bool> DeleteNhanVien(Guid id)
+        {
+            await _nhanVienRepository.Delete(id);
+            return await _nhanVienRepository.SaveChangesAsync() > 0;
         }
 
         public void Dispose()

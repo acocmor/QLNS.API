@@ -19,6 +19,7 @@ namespace QLNS.API.Application.DTOs.User
 
         [NotMapped]
         public string ConfirmPassword { get; set; }
+        public Guid NhanVienId { get; set; }
     }
 
     public class CreateUserDTOValidator : AbstractValidator<CreateUserDTO>

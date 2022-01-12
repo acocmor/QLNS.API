@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using QLNS.API.Application.DTOs.QueQuan;
 using QLNS.API.Application.Interfaces;
+using QLNS.Domain.Entities;
 using QLNS.Domain.Repositories;
 using System;
 using System.Collections.Generic;
@@ -18,24 +19,28 @@ namespace QLNS.API.Application.Services
             _queQuanRepository = queQuanRepository;
             _mapper = mapper;
         }
-        public Task<GetQueQuanDTO> CreateQueQuan(CreateQueQuanDTO request)
+        public async Task<GetQueQuanDTO> CreateQueQuan(CreateQueQuanDTO request)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var queQuan = _queQuanRepository.Create(_mapper.Map<QueQuan>(request));
+                await _queQuanRepository.SaveChangesAsync();
+                return _mapper.Map<GetQueQuanDTO>(queQuan);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
-        public Task<bool> DeleteQueQuan(Guid id)
+        public async Task<List<GetQueQuanDTO>> GetAllQueQuans()
         {
-            throw new NotImplementedException();
+            return _mapper.Map<List<GetQueQuanDTO>>(await _queQuanRepository.GetAll());
         }
 
-        public Task<List<GetQueQuanDTO>> GetAllQueQuans()
+        public async Task<GetQueQuanDTO> GetQueQuanById(Guid id)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<GetQueQuanDTO> GetQueQuanById(Guid id)
-        {
-            throw new NotImplementedException();
+            return _mapper.Map<GetQueQuanDTO>(await _queQuanRepository.GetById(id));
         }
 
         public async Task<GetQueQuanDTO> UpdateQueQuan(Guid id, UpdateQueQuanDTO request)
@@ -51,6 +56,12 @@ namespace QLNS.API.Application.Services
             _queQuanRepository.Update(original);
             await _queQuanRepository.SaveChangesAsync();
             return _mapper.Map<GetQueQuanDTO>(original);
+        }
+
+        public async Task<bool> DeleteQueQuan(Guid id)
+        {
+            await _queQuanRepository.Delete(id);
+            return await _queQuanRepository.SaveChangesAsync() > 0;
         }
 
         public void Dispose()

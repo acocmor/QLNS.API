@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using QLNS.API.Application.DTOs.User;
 using QLNS.API.Application.Interfaces;
+using QLNS.Domain.Entities;
 using QLNS.Domain.Repositories;
 using System;
 using System.Collections.Generic;
@@ -18,29 +19,46 @@ namespace QLNS.API.Application.Services
             _userRepository = userRepository;
             _mapper = mapper;
         }
-        public Task<GetUserDTO> CreateUser(CreateUserDTO request)
+        public async Task<GetUserDTO> CreateUser(CreateUserDTO request)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var user = _userRepository.Create(_mapper.Map<User>(request));
+                await _userRepository.SaveChangesAsync();
+                return _mapper.Map<GetUserDTO>(user);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
-        public Task<bool> DeleteUser(Guid id)
+        public async Task<bool> DeleteUser(Guid id)
         {
-            throw new NotImplementedException();
+            await _userRepository.Delete(id);
+            return await _userRepository.SaveChangesAsync() > 0;
         }
 
-        public Task<List<GetUserDTO>> GetAllUsers()
+        public async Task<List<GetUserDTO>> GetAllUsers()
         {
-            throw new NotImplementedException();
+            return _mapper.Map<List<GetUserDTO>>(await _userRepository.GetAll());
         }
 
-        public Task<GetUserDTO> GetUserById(Guid id)
+        public async Task<GetUserDTO> GetUserById(Guid id)
         {
-            throw new NotImplementedException();
+            return _mapper.Map<GetUserDTO>(await _userRepository.GetById(id));
         }
 
-        public Task<GetUserDTO> UpdateUser(Guid id, UpdateUserDTO request)
+        public async Task<GetUserDTO> UpdateUser(Guid id, UpdateUserDTO request)
         {
-            throw new NotImplementedException();
+            var original = await _userRepository.GetById(id);
+            if (original == null) return null;
+
+            original.Password = request.Password;
+
+            _userRepository.Update(original);
+            await _userRepository.SaveChangesAsync();
+            return _mapper.Map<GetUserDTO>(original);
         }
 
         public void Dispose()
