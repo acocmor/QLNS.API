@@ -38,6 +38,9 @@ namespace QLNS.API.Controllers
         [HttpPost]
         public async Task<ActionResult<GetNhanVienDTO>> Create([FromBody] CreateNhanVienDTO request)
         {
+            if (!ModelState.IsValid) {
+                return null;
+            }
             var newNhanVien = await _nhanVienService.CreateNhanVien(request);
             return CreatedAtAction(nameof(GetNhanVienById), new { id = newNhanVien.Id }, newNhanVien);
         }
