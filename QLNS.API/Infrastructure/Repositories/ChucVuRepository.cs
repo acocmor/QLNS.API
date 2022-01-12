@@ -17,7 +17,15 @@ namespace QLNS.Infrastructure.Repositories
 
         public override async Task<IEnumerable<ChucVu>> GetAll()
         {
-            return await DbSet.AsNoTracking().Include(x => x.DanhSachNhanVien).ToListAsync();
+            return await DbSet
+                        .AsNoTracking()
+                        .Include(x => x.DanhSachNhanVien)
+                        .ThenInclude(x => x.User)
+                        .Include(x => x.DanhSachNhanVien)
+                        .ThenInclude(x => x.QueQuan)
+                        .Include(x => x.DanhSachNhanVien)
+                        .ThenInclude(x => x.PhongBan)
+                        .ToListAsync();
         }
 
         public override async Task<ChucVu> GetById(Guid id)
@@ -25,6 +33,11 @@ namespace QLNS.Infrastructure.Repositories
             return await DbSet
                         .AsNoTracking()
                         .Include(x => x.DanhSachNhanVien)
+                        .ThenInclude(x => x.User)
+                        .Include(x => x.DanhSachNhanVien)
+                        .ThenInclude(x => x.QueQuan)
+                        .Include(x => x.DanhSachNhanVien)
+                        .ThenInclude(x => x.PhongBan)
                         .FirstOrDefaultAsync(e => e.Id == id);
         }
     }

@@ -19,6 +19,9 @@ namespace QLNS.Infrastructure.Repositories
         {
             return await DbSet.AsNoTracking()
                                 .Include(x => x.NhanVien)
+                                .Include(x => x.NhanVien.User)
+                                .Include(x => x.NhanVien.PhongBan)
+                                .Include(x => x.NhanVien.ChucVu)
                                 .ToListAsync();
         }
 
@@ -27,6 +30,9 @@ namespace QLNS.Infrastructure.Repositories
             return await DbSet
                         .AsNoTracking()
                         .Include(x => x.NhanVien)
+                        .Include(x => x.NhanVien.User)
+                        .Include(x => x.NhanVien.PhongBan)
+                        .Include(x => x.NhanVien.ChucVu)
                         .FirstOrDefaultAsync(e => e.Id == id);
         }
     }
