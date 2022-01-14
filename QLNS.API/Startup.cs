@@ -9,8 +9,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using QLNS.API.Application.DTOs.NhanVien;
 using QLNS.API.Application.DTOs.User;
+using QLNS.API.Application.Filters;
 using QLNS.API.Application.Interfaces;
 using QLNS.API.Application.Services;
+using QLNS.API.Application.Validators;
 using QLNS.Application.Mapping;
 using QLNS.Domain.Repositories;
 using QLNS.Infrastructure.Context;
@@ -52,19 +54,26 @@ namespace QLNS.API
             services.AddScoped<IHopDongLaoDongRepository, HopDongLaoDongRepository>();
             services.AddScoped<IHopDongLaoDongService, HopDongLaoDongService>();
 
-            services.AddTransient<IValidator<CreateUserDTO>, CreateUserDTOValidator>();
-            services.AddTransient<IValidator<CreateNhanVienDTO>, CreateNhanVienDTOValidator>();
-
             // AutoMapper settings
             services.AddAutoMapper(typeof(MappingProfile));
 
             //WebApi Configuration
-            services.AddControllers()
-                .AddNewtonsoftJson(ops => {
-                    ops.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+            services
+                .AddControllers( ops =>
+                    {
+                        ops.EnableEndpointRouting = false;
+                        ops.Filters.Add<ValidationFilter>();
+                    })
+                .AddNewtonsoftJson(ops =>
+                {
+                    //ops.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
                     ops.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                 })
-                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
+                .AddFluentValidation( fv =>
+                    {
+                        fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
+                        fv.RegisterValidatorsFromAssemblyContaining<Startup>();
+                    }); 
 
             services.AddSwaggerGen(c =>
             {

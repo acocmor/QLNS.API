@@ -4,6 +4,7 @@ using QLNS.API.Application.DTOs.NhanVien;
 using QLNS.API.Application.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace QLNS.API.Controllers
@@ -38,8 +39,9 @@ namespace QLNS.API.Controllers
         [HttpPost]
         public async Task<ActionResult<GetNhanVienDTO>> Create([FromBody] CreateNhanVienDTO request)
         {
-            if (!ModelState.IsValid) {
-                return null;
+            if(!ModelState.IsValid) {
+                //var errors = this.ModelState.Keys.SelectMany(key => this.ModelState[key].Errors);
+                throw new HttpResponseException()
             }
             var newNhanVien = await _nhanVienService.CreateNhanVien(request);
             return CreatedAtAction(nameof(GetNhanVienById), new { id = newNhanVien.Id }, newNhanVien);

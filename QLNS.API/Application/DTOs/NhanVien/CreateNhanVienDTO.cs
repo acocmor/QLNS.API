@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using QLNS.API.Application.DTOs.ChucVu;
+﻿using QLNS.API.Application.DTOs.ChucVu;
 using QLNS.API.Application.DTOs.PhongBan;
 using QLNS.API.Application.DTOs.QueQuan;
 using QLNS.API.Application.DTOs.User;
@@ -11,8 +10,6 @@ namespace QLNS.API.Application.DTOs.NhanVien
     public class CreateNhanVienDTO
     {
         public Guid Id { get; set; }
-
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Lỗi")]
         public string Ho { get; set; }
         public string Ten { get; set; }
         public int NgaySinh { get; set; }
@@ -26,14 +23,5 @@ namespace QLNS.API.Application.DTOs.NhanVien
         public virtual GetChucVuDTO ChucVu { get; set; }
         public Guid? PhongBanId { get; set; }
         public virtual GetPhongBanDTO PhongBan { get; set; }
-    }
-
-    public class CreateNhanVienDTOValidator : AbstractValidator<CreateNhanVienDTO>
-    {
-        public CreateNhanVienDTOValidator()
-        {
-            //RuleFor(o => o.Ho)
-            //    .NotEmpty();
-        }
     }
 }
