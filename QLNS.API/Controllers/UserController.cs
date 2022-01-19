@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using QLNS.API.Application.DTOs.User;
 using QLNS.API.Application.Interfaces;
@@ -59,6 +60,24 @@ namespace QLNS.API.Controllers
             var deleted = await _userService.DeleteUser(id);
             if (deleted) return NoContent();
             return NotFound();
+        }
+
+        [AllowAnonymous]
+        [HttpPost("login")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> Login([FromBody] LoginUserDTO userLogin)
+        {
+            var user = await _userService.Authencate(userLogin);
+            if(user != null)
+            {
+                var token = await _userService.Generate(user);
+                return Ok(token);
+            }
+
+            ModelState.AddModelError(nameof(userLogin.Email), "Tài khoản hoặc mật khẩu không đúng.");
+            ModelState.AddModelError(nameof(userLogin.Password), "Tài khoản hoặc mật khẩu không đúng.");
+            return BadRequest(ModelState);
         }
     }
 }

@@ -15,6 +15,8 @@ namespace QLNS.Application.Mapping
         {
             //User Map
             CreateMap<User, GetUserDTO>().ReverseMap();
+            CreateMap<User, LoginUserDTO>().ReverseMap();
+            CreateMap<GetUserDTO, LoginUserDTO>().ReverseMap();
             CreateMap<CreateUserDTO, User>();
             CreateMap<UpdateUserDTO, User>();
 

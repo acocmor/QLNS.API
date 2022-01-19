@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using QLNS.API.Domain.Configurations;
 using QLNS.Domain.Entities;
+using System.Security.Claims;
 
 namespace QLNS.Infrastructure.Context
 {

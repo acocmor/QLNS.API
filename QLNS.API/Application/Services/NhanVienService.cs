@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using QLNS.API.Application.DTOs.ChucVu;
 using QLNS.API.Application.DTOs.NhanVien;
 using QLNS.API.Application.DTOs.QueQuan;
@@ -7,6 +8,8 @@ using QLNS.Domain.Entities;
 using QLNS.Domain.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Validation;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace QLNS.API.Application.Services
@@ -15,14 +18,23 @@ namespace QLNS.API.Application.Services
     {
         private readonly INhanVienRepository _nhanVienRepository;
         private readonly IQueQuanRepository _queQuanRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly IChucVuRepository _chucVuRepository;
+        private readonly IPhongBanRepository _phongBanRepository;
         private readonly IMapper _mapper;
 
         public NhanVienService(INhanVienRepository nhanVienRepository,
                                 IQueQuanRepository queQuanRepository,
+                                IUserRepository userRepository,
+                                IChucVuRepository chucVuRepository,
+                                IPhongBanRepository phongBanRepository,
                                 IMapper mapper)
         {
             _nhanVienRepository = nhanVienRepository;
             _queQuanRepository = queQuanRepository;
+            _userRepository = userRepository;;
+            _phongBanRepository = phongBanRepository;
+            _chucVuRepository = chucVuRepository;
             _mapper = mapper;
         }
         public async Task<List<GetNhanVienDTO>> GetAllNhanViens()
@@ -36,6 +48,7 @@ namespace QLNS.API.Application.Services
         }
         public async Task<GetNhanVienDTO> CreateNhanVien(CreateNhanVienDTO request)
         {
+
             try
             {
                 var nhanVien = _nhanVienRepository.Create(_mapper.Map<NhanVien>(request));
@@ -43,8 +56,9 @@ namespace QLNS.API.Application.Services
                 return _mapper.Map<GetNhanVienDTO>(nhanVien);
             } catch (Exception)
             {
-                return null;
+                throw new Exception("Email bị trùng");
             }
+
         }
 
         public async Task<GetNhanVienDTO> UpdateNhanVien(Guid id, UpdateNhanVienDTO request)
@@ -96,6 +110,21 @@ namespace QLNS.API.Application.Services
             {
                 _nhanVienRepository.Dispose();
             }
+        }
+
+        public async Task<bool> GetUserByEmail(string email)
+        {
+            return await _userRepository.GetByEmail(email) != null ? true : false;
+        }
+
+        public async Task<bool> GetChucVuById(Guid id)
+        {
+            return await _chucVuRepository.GetById(id) != null ? true : false;
+        }
+
+        public async Task<bool> GetPhongBanById(Guid id)
+        {
+            return await _phongBanRepository.GetById(id) != null ? true : false;
         }
     }
 }

@@ -4,6 +4,9 @@ using QLNS.API.Application.DTOs.NhanVien;
 using QLNS.API.Application.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Validation;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -39,12 +42,44 @@ namespace QLNS.API.Controllers
         [HttpPost]
         public async Task<ActionResult<GetNhanVienDTO>> Create([FromBody] CreateNhanVienDTO request)
         {
-            if(!ModelState.IsValid) {
-                //var errors = this.ModelState.Keys.SelectMany(key => this.ModelState[key].Errors);
-                throw new HttpResponseException()
+            if(request == null)
+            {
+                return BadRequest();
             }
-            var newNhanVien = await _nhanVienService.CreateNhanVien(request);
-            return CreatedAtAction(nameof(GetNhanVienById), new { id = newNhanVien.Id }, newNhanVien);
+            if(!ModelState.IsValid) {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                if (await _nhanVienService.GetUserByEmail(request.User.Email))
+                {
+                    ModelState.AddModelError(nameof(request.User.Email), "Địa chỉ email đã tồn tại.");
+                    return BadRequest(ModelState);
+                }
+                if (request.PhongBanId != null)
+                {
+                    if(!await _nhanVienService.GetPhongBanById((Guid)request.PhongBanId))
+                    {
+                        ModelState.AddModelError(nameof(request.PhongBanId), "Phòng ban này không tồn tại");
+                        return BadRequest(ModelState);
+                    }
+                }
+                if (request.ChucVuId != null)
+                {
+                    if (!await _nhanVienService.GetChucVuById((Guid)request.ChucVuId))
+                    {
+                        ModelState.AddModelError(nameof(request.ChucVuId), "Chức vụ này không tồn tại");
+                        return BadRequest(ModelState);
+                    }
+                }
+                var newNhanVien = await _nhanVienService.CreateNhanVien(request);
+                if (newNhanVien == null) return BadRequest(ModelState);
+                return CreatedAtAction(nameof(GetNhanVienById), new { id = newNhanVien.Id }, newNhanVien);
+            } catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Lỗi ghi dữ liệu vào database!");
+            }
+            
         }
 
         [HttpPut("{id}")]
@@ -54,7 +89,7 @@ namespace QLNS.API.Controllers
             if (updateNhanVien == null) return NotFound();
             return NoContent();
         }
-
+            
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

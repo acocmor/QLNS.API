@@ -13,5 +13,8 @@ namespace QLNS.API.Application.Interfaces
         Task<GetUserDTO> CreateUser(CreateUserDTO request);
         Task<GetUserDTO> UpdateUser(Guid id, UpdateUserDTO request);
         Task<bool> DeleteUser(Guid id);
+        Task<GetUserDTO> Authencate(LoginUserDTO login);
+        Task<string> Generate(GetUserDTO login);
+
     }
 }

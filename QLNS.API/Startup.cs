@@ -1,11 +1,14 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using QLNS.API.Application.DTOs.NhanVien;
 using QLNS.API.Application.DTOs.User;
@@ -13,10 +16,12 @@ using QLNS.API.Application.Filters;
 using QLNS.API.Application.Interfaces;
 using QLNS.API.Application.Services;
 using QLNS.API.Application.Validators;
+using QLNS.API.Domain.ExceptionsHandling;
 using QLNS.Application.Mapping;
 using QLNS.Domain.Repositories;
 using QLNS.Infrastructure.Context;
 using QLNS.Infrastructure.Repositories;
+using System.Text;
 
 namespace QLNS.API
 {
@@ -33,9 +38,24 @@ namespace QLNS.API
         [System.Obsolete]
         public void ConfigureServices(IServiceCollection services)
         {
+            //setup JWT
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = Configuration["Jwt:Issuer"],
+                        ValidAudience = Configuration["Jwt:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+                    };
+                });
             //DbContext setting
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("QLNS")));
-
+            
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserService, UserService>();
 
@@ -53,6 +73,7 @@ namespace QLNS.API
 
             services.AddScoped<IHopDongLaoDongRepository, HopDongLaoDongRepository>();
             services.AddScoped<IHopDongLaoDongService, HopDongLaoDongService>();
+
 
             // AutoMapper settings
             services.AddAutoMapper(typeof(MappingProfile));
@@ -95,6 +116,8 @@ namespace QLNS.API
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

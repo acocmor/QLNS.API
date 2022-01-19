@@ -152,7 +152,7 @@ namespace QLNS.API.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<Guid>("NhanVienId")
                         .HasColumnType("uniqueidentifier");
@@ -165,6 +165,10 @@ namespace QLNS.API.Migrations
 
                     b.HasIndex("NhanVienId")
                         .IsUnique();
+
+                    b.HasIndex(new[] { "Email" }, "IX_EMAIL_OF_USER")
+                        .IsUnique()
+                        .HasFilter("[Email] IS NOT NULL");
 
                     b.ToTable("Users");
                 });

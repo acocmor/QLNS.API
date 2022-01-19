@@ -76,3 +76,12 @@ E:\Project\CSharp\QLNS.API\QLNS.API\obj\Debug\net5.0\ref\QLNS.API.dll
 E:\Project\CSharp\QLNS.API\QLNS.API\obj\Debug\net5.0\QLNS.API.pdb
 E:\Project\CSharp\QLNS.API\QLNS.API\obj\Debug\net5.0\QLNS.API.genruntimeconfig.cache
 E:\Project\CSharp\QLNS.API\QLNS.API\obj\Debug\net5.0\QLNS.API.csproj.AssemblyReference.cache
+E:\Project\CSharp\QLNS.API\QLNS.API\bin\Debug\net5.0\EntityFramework.SqlServer.dll
+E:\Project\CSharp\QLNS.API\QLNS.API\bin\Debug\net5.0\EntityFramework.dll
+E:\Project\CSharp\QLNS.API\QLNS.API\bin\Debug\net5.0\System.CodeDom.dll
+E:\Project\CSharp\QLNS.API\QLNS.API\bin\Debug\net5.0\System.Data.SqlClient.dll
+E:\Project\CSharp\QLNS.API\QLNS.API\bin\Debug\net5.0\runtimes\win-arm64\native\sni.dll
+E:\Project\CSharp\QLNS.API\QLNS.API\bin\Debug\net5.0\runtimes\win-x64\native\sni.dll
+E:\Project\CSharp\QLNS.API\QLNS.API\bin\Debug\net5.0\runtimes\win-x86\native\sni.dll
+E:\Project\CSharp\QLNS.API\QLNS.API\bin\Debug\net5.0\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
+E:\Project\CSharp\QLNS.API\QLNS.API\bin\Debug\net5.0\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll

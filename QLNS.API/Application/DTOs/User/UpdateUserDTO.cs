@@ -8,7 +8,10 @@ namespace QLNS.API.Application.DTOs.User
     {
         public Guid Id { get; set; }
 
-        [Required(ErrorMessage = "Hãy nhập mật khẩu")]
+        [Required(ErrorMessage = "Hãy nhập mật khẩu cũ")]
+        public string OldPassword { get; set; }
+
+        [Required(ErrorMessage = "Hãy nhập mật khẩu mới")]
         public string Password { get; set; }
 
         [NotMapped]
